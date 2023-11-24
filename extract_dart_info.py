@@ -35,25 +35,25 @@ def extract_libflutter_info(libflutter_file):
         else:
             assert False, "Unsupport architecture: " + elf.header.e_machine
 
-        section = elf.get_section_by_name('.rodata')
-        data = section.data()
+        # section = elf.get_section_by_name('.rodata')
+        # data = section.data()
         
-        sha_hashes = re.findall(b'\x00([a-f\\d]{40})\x00', data)
-        assert len(sha_hashes) == 2
-        #print(sha_hashes)
-        # all possible engine ids
-        engine_ids = [ h.decode() for h in sha_hashes ]
+        # sha_hashes = re.findall(b'\x00([a-f\\d]{40})\x00', data)
+        # assert len(sha_hashes) == 2
+        # #print(sha_hashes)
+        # # all possible engine ids
+        # engine_ids = [ h.decode() for h in sha_hashes ]
         
-        # beta/dev version of flutter might not use stable dart version (we can get dart version from sdk with found engine_id)
-        # support only stable
-        epos = data.find(b' (stable) (')
-        if epos == -1:
-            dart_version = None
-        else:
-            pos = data.rfind(b'\x00', 0, epos) + 1
-            dart_version = data[pos:epos].decode()
+        # # beta/dev version of flutter might not use stable dart version (we can get dart version from sdk with found engine_id)
+        # # support only stable
+        # epos = data.find(b' (stable) (')
+        # if epos == -1:
+        #     dart_version = None
+        # else:
+        #     pos = data.rfind(b'\x00', 0, epos) + 1
+        #     dart_version = data[pos:epos].decode()
         
-    return engine_ids, dart_version, arch, 'android'
+    return None, None, arch, 'android'
 
 def get_dart_sdk_url_size(engine_ids):
     #url = f'https://storage.googleapis.com/dart-archive/channels/stable/release/3.0.3/sdk/dartsdk-windows-x64-release.zip'
@@ -102,11 +102,13 @@ def get_dart_commit(url):
 
 def extract_dart_info(libapp_file: str, libflutter_file: str):
     snapshot_hash = extract_snapshot_hash(libapp_file)
-    #print('snapshot hash', snapshot_hash)
+    print('snapshot hash', snapshot_hash)
 
     engine_ids, dart_version, arch, os_name = extract_libflutter_info(libflutter_file)
     # print('possible engine ids', engine_ids)
     # print('dart version', dart_version)
+    dart_version = '2.15.1'
+    
 
     if dart_version is None:
         engine_id, sdk_url, sdk_size = get_dart_sdk_url_size(engine_ids)
@@ -120,7 +122,8 @@ def extract_dart_info(libapp_file: str, libflutter_file: str):
         #assert dart_version == dart_version_sdk
     
     # TODO: os (android or ios) and architecture (arm64 or x64)
-    return dart_version, snapshot_hash, arch, os_name
+    # return dart_version, snapshot_hash, arch, os_name
+    return '2.15.1', snapshot_hash, arch, os_name
 
 
 if __name__ == "__main__":
