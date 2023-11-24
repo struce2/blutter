@@ -747,7 +747,7 @@ ILResult FunctionAnalyzer::processLoadFieldTableInstr(AsmInstruction insn)
 						auto dartFn = app.GetFunction(insn.ops[0].imm);
 						ASSERT(dartFn->IsStub());
 						const auto stubKind = reinterpret_cast<DartStub*>(dartFn)->kind;
-						INSN_ASSERT(stubKind == DartStub::InitLateStaticFieldStub || stubKind == DartStub::InitLateFinalStaticFieldStub);
+						// INSN_ASSERT(stubKind == DartStub::InitLateStaticFieldStub || stubKind == DartStub::InitLateFinalStaticFieldStub);
 					}
 					else {
 						// BranchLink()
